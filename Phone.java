@@ -4,14 +4,14 @@ import java.net.Socket;
 
 public class Phone {
 
-    ServerSocket serverSocket;
-    Socket client;
-    BufferedReader reader;
-    BufferedWriter writer;
+    private ServerSocket server;
+    private Socket client;
+    private BufferedReader reader;
+    private BufferedWriter writer;
 
     public Phone(String port) {
         try {
-            serverSocket = new ServerSocket(Integer.parseInt(port));
+            server = new ServerSocket(Integer.parseInt(port));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -28,7 +28,7 @@ public class Phone {
 
     public void accept() {
         try {
-            client = serverSocket.accept();
+            client = server.accept();
             createStreams();
         } catch (IOException e) {
             e.printStackTrace();

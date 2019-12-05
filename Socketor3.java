@@ -2,9 +2,11 @@ public class Socketor3 {
     public static void main(String[] args) {
         if(args.length<3){
             System.out.println("Used: \n" +
-                    "java Spcketor server 8000 /\n");
+                    "java Socketor server 8000 /\n" +
+                    "java Socketor client 127.0.0.1 8000 45 35");
             return;
         }
+
         Socketor3 socketor3 = new Socketor3();
         if(args[0].equals("server"))
             socketor3.runServer(args[1], args[2]);
@@ -15,7 +17,8 @@ public class Socketor3 {
 
     private void runServer(String port, String operation) {
         Phone phone = new Phone(port);
-        System.out.println("server started with operation " + operation);
+        System.out.println("Server started with operation (" + operation +
+                ") on port " + port );
         while (true){
             phone.accept();
             String a = phone.readLine();
