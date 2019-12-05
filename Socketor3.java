@@ -19,12 +19,13 @@ public class Socketor3 {
         Phone phone = new Phone(port);
         System.out.println("Server started with operation (" + operation +
                 ") on port " + port );
+        int count = 0;
         while (true){
             phone.accept();
             String a = phone.readLine();
             String b = phone.readLine();
             int result = calculate(operation, a, b);
-            String message = a + " " + operation + " " + b + " = " +result;
+            String message ="Client # " + (++count)+ ":" + a + " " + operation + " " + b + " = " +result;
             phone.writeLine(message);
             phone.close();
 
