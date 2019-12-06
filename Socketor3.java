@@ -16,20 +16,25 @@ public class Socketor3 {
     }
 
     private void runServer(String port, String operation) {
-        Phone phone = new Phone(port);
+        Phone phoneServer = new Phone(port);
         System.out.println("Server started with operation (" + operation +
                 ") on port " + port );
-        int count = 0;
-        while (true){
-            phone.accept();
-            String a = phone.readLine();
-            String b = phone.readLine();
-            int result = calculate(operation, a, b);
-            String message ="Client # " + (++count)+ ":" + a + " " + operation + " " + b + " = " +result;
-            phone.writeLine(message);
-            phone.close();
 
+        while (true){
+            Phone phone = new Phone(phoneServer);
+            System.out.println("Client accepted");
+            new Thread(()->{
+                String a = phone.readLine();
+                String b = phone.readLine();
+                int result = calculate(operation, a, b);
+                String message = a + " " + operation + " " + b + " = " + result;
+                try { Thread.sleep(4000); } catch (InterruptedException e) { e.printStackTrace(); }
+                phone.writeLine(message);
+                phone.close();
+            }).start();
+            if(Math.random() == 0.0) break;
         }
+        phoneServer.closeServer();
     }
 
     private int calculate(String operation, String a, String b) {

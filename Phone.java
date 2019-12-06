@@ -9,12 +9,20 @@ public class Phone {
     private BufferedReader reader;
     private BufferedWriter writer;
 
-    public Phone(String port) {
+
+    public Phone(String port) { // server
         try {
             server = new ServerSocket(Integer.parseInt(port));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+    }
+
+    public Phone(Phone phoneServer) {
+        server = null;
+        client = phoneServer.accept();
+        createStreams();
+
     }
 
     public Phone(String ip, String port) {
@@ -22,27 +30,26 @@ public class Phone {
             client = new Socket(ip, Integer.parseInt(port));
             createStreams();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    public void accept() {
+    private Socket accept() {
         try {
-            client = server.accept();
-            createStreams();
+            return server.accept();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    private void createStreams(){
+    private void createStreams() {
         try {
             reader = new BufferedReader(
-                    new InputStreamReader( client.getInputStream()));
+                    new InputStreamReader(client.getInputStream()));
             writer = new BufferedWriter(
                     new OutputStreamWriter(client.getOutputStream()));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
     }
@@ -56,7 +63,6 @@ public class Phone {
         return "";
     }
 
-   
 
     public void close() {
         try {
@@ -64,12 +70,9 @@ public class Phone {
             writer.close();
             client.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
-
-
-
 
     public void writeLine(String message) {
         try {
@@ -77,7 +80,15 @@ public class Phone {
             writer.newLine();
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void closeServer() {
+        try {
+            server.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
